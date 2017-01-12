@@ -35,10 +35,11 @@ int main(int argc, char** argv) {
   ROS_INFO("Subscriber end.\n");
 
   //ros::spin();
+  ros::Rate rate(30.0);
 
-  while(!processor.wasStopped()){
-   sleep(1);
-   ros::spin();
+  while(ros::ok() && !processor.wasStopped()){
+    ros::spinOnce();
+    rate.sleep();
   }
 
 

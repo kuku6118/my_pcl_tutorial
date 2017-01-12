@@ -14,9 +14,10 @@
 
 namespace pcl_sample {
 
-pcl::visualization::CloudViewer viewer("Cloud Viewer");
+//pcl::visualization::CloudViewer viewer("Cloud Viewer");
 
 int user_data = 0; 
+bool saveCloud(false);
 
 void viewerOneOff (pcl::visualization::PCLVisualizer& viewer)
 {
@@ -49,24 +50,35 @@ void viewerPsycho (pcl::visualization::PCLVisualizer& viewer)
 #endif
 }
 
+void
+keyboardEventOccured(const pcl::visualization::KeyboardEvent& event, void* nothing)
+{
+  if(event.getKeySym() == "space"&& event.keyDown())
+    saveCloud = true;
+}
+
 Processor::Processor(const ros::Time& prev_time)
   : prev_time_(prev_time),
     time_taken_(ros::Duration(0)),
     num_calls_(0) {
 
+  boost::shared_ptr<visualization::CloudViewer> v(new visualization::CloudViewer("OpenNI viewer"));
+  v->registerKeyboardCallback(keyboardEventOccured);
+  m_viewer = v;
+
   m_cloud = pcl::PointCloud<pcl::PointXYZRGB>::Ptr(new pcl::PointCloud<pcl::PointXYZRGB>);
   //viewer = std::shared_ptr<pcl::visualization::CloudViewer>(new pcl::visualization::CloudViewer);
   // blocks until the cloud is actually rendered
-  viewer.showCloud(m_cloud);
+  m_viewer->showCloud(m_cloud);
 
   // use the following functions to get access to the underlying more advanced/powerful
   // PCLVisualizer
 
   // This will only get called once
-  viewer.runOnVisualizationThreadOnce (viewerOneOff);
+  m_viewer->runOnVisualizationThreadOnce (viewerOneOff);
 
   // This will get called once per visualization iteration
-  viewer.runOnVisualizationThread (viewerPsycho);
+  m_viewer->runOnVisualizationThread (viewerPsycho);
 }
 
 Processor::~Processor()
@@ -101,16 +113,19 @@ void Processor::Callback(const sensor_msgs::PointCloud2ConstPtr& msg) {
   ROS_INFO("Processor::Callback start.\n");
   // Use PCL's conversion.
 
+
   try
   {
     pcl::fromROSMsg(*msg, *m_cloud);
+    if (!m_viewer->wasStopped())
+      m_viewer->showCloud(m_cloud->makeShared());
   }
   catch (std::runtime_error e)
   {
     ROS_ERROR_STREAM("Error in converting cloud to image message: "
                       << e.what());
   }
-
+/*
   pcl::PointXYZRGB average;
 
   Average(*m_cloud, &average);
@@ -118,13 +133,13 @@ void Processor::Callback(const sensor_msgs::PointCloud2ConstPtr& msg) {
   // Log the average point at the INFO level. You can specify other logging
   // levels using ROS_DEBUG, ROS_WARN, etc. Search for "ros logging" online.
   ROS_INFO("x: %f y: %f z: %f, time/point: %fs",
-    average.x, average.y, average.z, time_taken_.toSec() / num_calls_);
+    average.x, average.y, average.z, time_taken_.toSec() / num_calls_);*/
   ROS_INFO("Processor::Callback end.\n");
 }
 
 bool Processor::wasStopped()
 {
-  return viewer.wasStopped();
+  return m_viewer->wasStopped();
 }
 
 }

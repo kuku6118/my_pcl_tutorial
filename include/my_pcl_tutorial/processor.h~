@@ -31,6 +31,8 @@ class Processor {
   bool wasStopped();
 
  private:
+  keyboardEventOccured(const pcl::visualization::KeyboardEvent& event, void* nothing);
+
   // Keep track of the average time between calls of the callback.
   ros::Time prev_time_;      // The time of the last callback.
   ros::Duration time_taken_; // The time between the last two callbacks.

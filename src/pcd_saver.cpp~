@@ -34,8 +34,8 @@ void combineCloudto(pcl::PointCloud<pcl::PointXYZRGBA> &cloud, float *Rot, float
 
     pcl::transformPointCloud(cloud, t_cloud, transform);
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_in;
-    pcl::PointCloud<pcl::PointXYZ>LLPtr cloud_out;
+    pcl::PointCloud<pcl::PointXYZ> cloud_in;
+    pcl::PointCloud<pcl::PointXYZ> cloud_out;
 
     pcl::IterativeClosestPoint<pcl::PointXYZ, pcl::PointXYZ> icp;
     icp.setInputCloud(cloud_in);
