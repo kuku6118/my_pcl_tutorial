@@ -1,1 +1,0 @@
-/home/kuku/catkin_ws/src/my_pcl_tutorial/GoICP_V1.3/src/build/CMakeFiles/GoICP.dir
