@@ -4,6 +4,7 @@
 // See processor_node.cpp for explanations of what each header provides.
 #include "my_pcl_tutorial/processor.h"
 
+#include <ros/package.h>
 #include "pcl/point_types.h"                 // pcl::PointXYZRGB
 #include "pcl_conversions/pcl_conversions.h" // pcl::fromROSMsg
 #include "pcl_ros/point_cloud.h"             // pcl::PointCloud

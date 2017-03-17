@@ -11,6 +11,11 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
+find_package(OpenCV REQUIRED COMPONENTS
+  highgui
+  core
+)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -116,8 +121,19 @@ catkin_package(
 # include_directories(include)
 include_directories(
   include
+  include/super4pcs
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  #/usr/local/include/pcl-1.8/pcl
+  ${OpenCV_INCLUDE_DIRS}
+)
+
+link_directories(
+  lib
+  lib/src/super4pcs/accelerators
+  lib/src/super4pcs/io
+  lib/3rdparty/chealpix
+  #/usr/local/lib
 )
 
 ## Declare a C++ library
@@ -150,20 +166,58 @@ add_dependencies(example processor)
 # target_link_libraries(my_pcl_tutorial_node
 #   ${catkin_LIBRARIES}
 # )
+
 target_link_libraries(processor
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
+  #pcl_io
+  #pcl_io_ply
+  #pcl_kdtree
+  #pcl_registration
+  #pcl_surface
+  #pcl_visualization
+  #pcl_common
+  #pcl_features
+  #pcl_keypoints
+  #pcl_search
 )
 
 target_link_libraries(example
   processor
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
+  #pcl_io
+  #pcl_io_ply
+  #pcl_kdtree
+  #pcl_registration
+  #pcl_surface
+  #pcl_visualization
+  #pcl_common
+  #pcl_features
+  #pcl_keypoints
+  #pcl_search
 )
 
 target_link_libraries(pcd_saver
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
+  #pcl_io
+  #pcl_io_ply
+  #pcl_kdtree
+  #pcl_registration
+  #pcl_surface
+  #pcl_visualization
+  #pcl_common
+  #pcl_features
+  #pcl_keypoints
+  #pcl_search
+  super4pcs_accel
+  super4pcs_io
+  super4pcs_algo
+  ann
+  chealpix
+  opencv_core
+  opencv_highgui
 )
 
 #target_link_libraries(convert_pointcloud_to_image
@@ -182,7 +236,7 @@ target_link_libraries(pcd_saver
 #)
 
 #### Use modern C++ features.
-set(CMAKE_CXX_FLAGS "-std=c++0x")
+set(CMAKE_CXX_FLAGS "-std=c++11 -O2")
 
 #############
 ## Install ##
